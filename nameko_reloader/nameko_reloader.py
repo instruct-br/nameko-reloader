@@ -12,7 +12,7 @@ from nameko.cli.main import setup_yaml_parser, CommandError, ConfigurationError
 from nameko.cli.run import import_service
 from nameko.cli.commands import commands
 from nameko.runners import ServiceRunner
-from cli_commands import RunExtra
+from nameko_reloader.cli_commands import RunExtra
 
 
 def custom_setup_parser():
