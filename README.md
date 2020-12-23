@@ -4,8 +4,8 @@ Extensão do Nameko, que adiciona o recurso de `hot-reload` quando detecta alter
 
 ## Executando
 
-Inicie seus serviços passando a flag `--restart`, como no exemplo abaixo:
+Inicie seus serviços passando a flag `--reload`, como no exemplo abaixo:
 
 ```py
-python nameko_reloader.py run service.service_a service.service_b --restart
+python nameko_reloader.py run service.service_a service.service_b --reload
 ```

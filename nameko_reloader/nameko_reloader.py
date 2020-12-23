@@ -73,7 +73,7 @@ def main():
         config = {AMQP_URI_CONFIG_KEY: args.broker}
 
     try:
-        if args.restart:
+        if args.reload:
             modules = [import_module(module) for module in args.services]
             file_paths = [module.__file__ for module in modules]
             classes = reload_classes(args.services)

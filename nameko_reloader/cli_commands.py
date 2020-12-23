@@ -18,7 +18,7 @@ class RunExtra(Run):
         )
         parser.add_argument("--config", default="", help="The YAML configuration file")
         parser.add_argument(
-            "--restart", action="store_true", help="Restart service on file changes"
+            "--reload", action="store_true", help="Reload services on file changes"
         )
         parser.add_argument(
             "--broker",
