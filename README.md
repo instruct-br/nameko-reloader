@@ -1,10 +1,10 @@
 # nameko-reloader
 
-Extensão do Nameko, que adiciona o recurso de `hot-reload` quando detecta alterações no arquivo do serviço nameko.
+Extension for [Nameko](https://www.nameko.io/), that implements the _hot-reload_ feature, when detects changes in service file.
 
-## Executando
+## Usage
 
-Inicie seus serviços passando a flag `--reload`, como no exemplo abaixo:
+Start your services using `nameko_reloader`, and passing the `--reload` option:
 
 ```py
 nameko_reloader run service.service_a service.service_b --reload
