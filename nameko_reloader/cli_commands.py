@@ -5,6 +5,7 @@ class RunExtra(Run):
     """
     Nameko run command with additional args
     """
+
     name = "run"
 
     @staticmethod
@@ -16,14 +17,12 @@ class RunExtra(Run):
             help="python path to one or more service classes to run",
         )
         parser.add_argument(
-            "--config",
-            default="",
-            help="The YAML configuration file"
+            "--config", default="", help="The YAML configuration file"
         )
         parser.add_argument(
             "--reload",
             action="store_true",
-            help="Reload services on file changes"
+            help="Reload services on file changes",
         )
         parser.add_argument(
             "--broker",

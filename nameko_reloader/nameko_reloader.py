@@ -25,7 +25,7 @@ def custom_setup_parser():
         "-v",
         "--version",
         action="version",
-        version=get_distribution("nameko").version
+        version=get_distribution("nameko").version,
     )
     subparsers = parser.add_subparsers()
     commands.append(RunExtra)
@@ -81,7 +81,9 @@ def main():
             print("Starting services...")
             runner = ServiceRunner(config=config)
             [runner.add_service(class_) for class_ in classes]
-            last_update_time_files = [os.stat(file).st_mtime for file in file_paths]
+            last_update_time_files = [
+                os.stat(file).st_mtime for file in file_paths
+            ]
             runner.start()
             print("Services up!")
 
