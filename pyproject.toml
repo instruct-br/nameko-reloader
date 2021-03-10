@@ -2,13 +2,50 @@
 name = "nameko-reloader"
 version = "0.1.0"
 description = "Add hot reload feature for nameko services"
-authors = ["Renan Santana <renan.santana@instruct.com.br>"]
+authors = ["Instruct Developers <oss@instruct.com.br>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/instruct-br/nameko-reloader"
+repository = "https://github.com/instruct-br/nameko-reloader"
+keywords = ["nameko", "hot", "reload"]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+]
+include = [
+    "LICENSE",
+]
 
 [tool.poetry.dependencies]
 python = "^3.6"
 nameko = "^2.13.0"
 
 [tool.poetry.dev-dependencies]
+black = "^20.8b1"
+flake8 = "^3.8.3"
+
+[tool.black]
+line-length = 79
+skip-string-normalization = true
+target-version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs
+    | \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+)
+'''
 
 [tool.poetry.scripts]
 nameko_reloader = "nameko_reloader.nameko_reloader:main"

@@ -17,17 +17,20 @@ from nameko_reloader.cli_commands import RunExtra
 
 def custom_setup_parser():
     """
-    Monto manualmente o parser do nameko, para utilizar o command RunExtra,
-    onde adicionei a nova opção --restart
+    Manually mount nameko parser, adding the RunExtra command, where the
+    --restart option exists.
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-v", "--version", action="version", version=get_distribution("nameko").version
+        "-v",
+        "--version",
+        action="version",
+        version=get_distribution("nameko").version,
     )
     subparsers = parser.add_subparsers()
     commands.append(RunExtra)
     for command in commands:
-        # Ignora o command Run, pois ele foi substituído pelo RunExtra
+        # Ignore the Run command, we change it to RunExtra
         if command.name == "Run":
             continue
         command_parser = subparsers.add_parser(
@@ -40,8 +43,7 @@ def custom_setup_parser():
 
 def reload_modules(modules):
     """
-    Recarrega os módulos dos serviços para que as alterações feitas no código
-    sejam carregadas.
+    Reloads the services modules, so changes made in code can be loaded.
     """
     for module in modules:
         reload(module)
@@ -49,8 +51,7 @@ def reload_modules(modules):
 
 def reload_classes(services):
     """
-    Recarrega as classes dos módulos, para que as alterações feitas nas mesmas
-    sejam carregadas.
+    Reloads modules classes, so changes made to them can be loaded.
     """
     classes = [import_service(service) for service in services]
     classes = list(itertools.chain(*classes))
@@ -80,7 +81,9 @@ def main():
             print("Starting services...")
             runner = ServiceRunner(config=config)
             [runner.add_service(class_) for class_ in classes]
-            last_update_time_files = [os.stat(file).st_mtime for file in file_paths]
+            last_update_time_files = [
+                os.stat(file).st_mtime for file in file_paths
+            ]
             runner.start()
             print("Services up!")
 
@@ -91,12 +94,9 @@ def main():
                         last_update_time_files.append(last_update_time)
                         print(f"Changes detected in {file}")
                         print("Reloading services...")
-                        # Para o serviço atual
                         runner.stop()
                         runner.wait()
-                        # Recarrega os módulos com as novas alterações
                         reload_modules(modules)
-                        # Inicia o serviço novamente
                         classes = reload_classes(args.services)
                         runner = ServiceRunner(config=config)
                         [runner.add_service(class_) for class_ in classes]
