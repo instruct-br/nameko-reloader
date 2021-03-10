@@ -6,6 +6,6 @@ Extension for [Nameko](https://www.nameko.io/), that implements the _hot-reload_
 
 Start your services using `nameko_reloader`, and passing the `--reload` option:
 
-```py
+```sh
 nameko_reloader run service.service_a service.service_b --reload
 ```
