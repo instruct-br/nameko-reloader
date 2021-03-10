@@ -2,7 +2,7 @@
 name = "nameko-reloader"
 version = "0.1.0"
 description = "Add hot reload feature for nameko services"
-authors = ["Renan Santana <renan.santana@instruct.com.br>"]
+authors = ["Instruct Developers <oss@instruct.com.br>"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
