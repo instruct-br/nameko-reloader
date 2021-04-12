@@ -78,10 +78,9 @@ def main():
             # Check if services arg is a folder with an __init__ file:
             # If true, file_paths must contain the path of every service
             if len(file_paths) == 1 and '__init__' in file_paths[0]:
-                file_paths = os.path.join(
-                    os.getcwd(),
-                    file_paths[0]
-                ).replace('__init__.py', '')
+                file_paths = os.path.join(os.getcwd(), file_paths[0]).replace(
+                    '__init__.py', ''
+                )
                 file_paths = [file_paths + i for i in os.listdir(file_paths)]
 
             classes = reload_classes(args.services)
