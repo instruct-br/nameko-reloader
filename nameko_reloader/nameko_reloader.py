@@ -64,9 +64,6 @@ def main():
     args = parser.parse_args()
     setup_yaml_parser()
 
-    if "." not in sys.path:
-        sys.path.insert(0, ".")
-
     if args.config:
         with open(args.config) as fle:
             config = yaml.unsafe_load(fle)
@@ -77,6 +74,16 @@ def main():
         if args.reload:
             modules = [import_module(module) for module in args.services]
             file_paths = [module.__file__ for module in modules]
+
+            # Check if services arg is a folder with an __init__ file:
+            # If true, file_paths must contain the path of every service
+            if len(file_paths) == 1 and '__init__' in file_paths[0]:
+                file_paths = os.path.join(
+                    os.getcwd(),
+                    file_paths[0]
+                ).replace('__init__.py', '')
+                file_paths = [file_paths + i for i in os.listdir(file_paths)]
+
             classes = reload_classes(args.services)
             print("Starting services...")
             runner = ServiceRunner(config=config)
