@@ -5,6 +5,7 @@ import argparse
 import eventlet
 import itertools
 import yaml
+import logging
 from importlib import reload, import_module
 from pkg_resources import get_distribution
 from nameko.constants import AMQP_URI_CONFIG_KEY
@@ -64,36 +65,66 @@ def main():
     args = parser.parse_args()
     setup_yaml_parser()
 
-    if "." not in sys.path:
-        sys.path.insert(0, ".")
-
     if args.config:
-        with open(args.config) as fle:
-            config = yaml.unsafe_load(fle)
+        with open(args.config) as file:
+            config = yaml.unsafe_load(file)
     else:
-        config = {AMQP_URI_CONFIG_KEY: args.broker}
+        config = {
+            AMQP_URI_CONFIG_KEY: args.broker,
+            "LOGGING": {
+                "version": 1,
+                "formatters": {
+                    "default": {
+                        "format": "[%(asctime)s][%(levelname)s] %(name)s - %(message)s",
+                        "datefmt": "%H:%M:%S",
+                    }
+                },
+                "handlers": {
+                    "default": {
+                        "level": "INFO",
+                        "formatter": "default",
+                        "class": "logging.StreamHandler",
+                    }
+                },
+                "root": {
+                    "level": "INFO",
+                    "propagate": True,
+                    "handlers": ["default"],
+                },
+            },
+        }
+    logging.config.dictConfig(config.get('LOGGING'))
 
     try:
         if args.reload:
             modules = [import_module(module) for module in args.services]
             file_paths = [module.__file__ for module in modules]
+
+            # Check if services arg is a folder with an __init__ file:
+            # If true, file_paths must contain the path of every service
+            if len(file_paths) == 1 and '__init__' in file_paths[0]:
+                file_paths = os.path.join(os.getcwd(), file_paths[0]).replace(
+                    '__init__.py', ''
+                )
+                file_paths = [file_paths + i for i in os.listdir(file_paths)]
+
             classes = reload_classes(args.services)
-            print("Starting services...")
+            logging.info("Starting services...")
             runner = ServiceRunner(config=config)
             [runner.add_service(class_) for class_ in classes]
             last_update_time_files = [
                 os.stat(file).st_mtime for file in file_paths
             ]
             runner.start()
-            print("Services up!")
+            logging.info("Services up!")
 
             while True:
                 for file in file_paths:
                     last_update_time = os.stat(file).st_mtime
                     if last_update_time not in last_update_time_files:
                         last_update_time_files.append(last_update_time)
-                        print(f"Changes detected in {file}")
-                        print("Reloading services...")
+                        logging.info(f"Changes detected in {file}")
+                        logging.info("Reloading services...")
                         runner.stop()
                         runner.wait()
                         reload_modules(modules)
@@ -101,13 +132,13 @@ def main():
                         runner = ServiceRunner(config=config)
                         [runner.add_service(class_) for class_ in classes]
                         runner.start()
-                        print("Services reloaded")
+                        logging.info("Services reloaded")
                     else:
                         time.sleep(1)
         else:
             args.main(args)
     except (CommandError, ConfigurationError) as exc:
-        print("Error: {}".format(exc))
+        logging.error("Error: {}".format(exc))
 
 
 if __name__ == "__main__":
