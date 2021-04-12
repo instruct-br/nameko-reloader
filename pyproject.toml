@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nameko-reloader"
-version = "0.1.0"
+version = "0.1.1"
 description = "Add hot reload feature for nameko services"
 authors = ["Instruct Developers <oss@instruct.com.br>"]
 license = "MIT"
