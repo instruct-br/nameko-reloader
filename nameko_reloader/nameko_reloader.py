@@ -5,7 +5,6 @@ import os
 import sys
 import time
 from importlib import import_module, reload
-from types import ModuleType
 
 import eventlet
 import yaml
@@ -111,9 +110,9 @@ def main():
                 if module.__file__.endswith("__init__.py"):
                     modules.extend(
                         [
-                            getattr(module, m)
+                            import_module(getattr(module, m).__module__)
                             for m in dir(module)
-                            if type(getattr(module, m)) == ModuleType
+                            if type(getattr(module, m)) == type
                         ]
                     )
                 else:
