@@ -94,7 +94,7 @@ def main():
 
     if args.config:
         with open(args.config) as file:
-            config = yaml.unsafe_load(file)
+            config = yaml.safe_load(file)
     else:
         config = {AMQP_URI_CONFIG_KEY: args.broker}
 
